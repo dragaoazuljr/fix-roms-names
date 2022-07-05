@@ -2,7 +2,7 @@
 A node application that find the best match for each rom name using retroarch db as source
 
 ## Installation
-Must have node installed on the machine. after install `cd` to repo folder and run:
+Must have node installed on the machine. after installed, `cd` to repo folder and run:
 `$ npm install`
 
 ## Running
