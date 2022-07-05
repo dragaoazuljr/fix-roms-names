@@ -6,6 +6,9 @@ Must have node installed on the machine. after installed, `cd` to repo folder an
 `$ npm install`
 
 ## Running
+
+**Important**: I only tested this on a linux pc, I don't know if will work on Windows, because of the \ or / on the folders paths.
+
 First run `$ node get-games-list-from-retroarch.js` to create a `games.json` with all the games found on [thumbnails.libretro.com](https://thumbnails.libretro.com/)
 Then you must change the console's folder's name to match the ones on retroarch database, to do this run `$ node match-folder-name.js` It will ask the path to the folder of the roms, then it will show what will change and ask if can change the name of the folders.
 e.g:
