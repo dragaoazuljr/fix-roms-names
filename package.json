@@ -13,6 +13,7 @@
     "closest-match": "^1.3.3",
     "got": "^12.1.0",
     "jsdom": "^20.0.0",
+    "readline-sync": "^1.4.10",
     "string-similarity": "^4.0.4"
   }
 }

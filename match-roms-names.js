@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import * as closestMatch from 'closest-match';
 import * as stringSimilarity from 'string-similarity';
+import readLine from 'readline-sync';
 
 const readGamesJson = () => {
     const file = fs.readFileSync('games.json');
@@ -8,7 +8,7 @@ const readGamesJson = () => {
     return JSON.parse(file.toString());
 }
 
-const findClosestMatch = (rom, consoleGameList, romFolder) => {
+const findClosestMatch = (rom, consoleGameList, romFolder, porcentage) => {
     const romNameWithoutExtension = removeExtension(rom);
     const similarity = stringSimilarity.findBestMatch(romNameWithoutExtension, consoleGameList);
     const closest = similarity.bestMatch.target;
@@ -16,7 +16,7 @@ const findClosestMatch = (rom, consoleGameList, romFolder) => {
 
     //best porcentage so far: 0.394
 
-    if(distance >= 0.394 && romNameWithoutExtension !== closest) {
+    if(distance >= porcentage && romNameWithoutExtension !== closest) {
         changeFileName(rom, closest, romFolder)
     }
 }
@@ -60,14 +60,29 @@ const removeExtension = (name = '') => {
 
 const games = readGamesJson();
 
-const folder = '/media/danillo-moraes/Linux/roms';
+let folder = readLine.question('Digit the path to roms folder: ');
+const porcentage = readLine.question('Percentage of similarity: The minimun percentage of similarity to change the name. Too little, the chances of changing to a wrong name will be higher. Too much, the chance of not changing to a correct name will be higher. Recomended: 0.394. Between 0 and 1:');
+const nPor = Number(porcentage);
 
-const consoleFolders = fs.readdirSync(folder);
+if(nPor === NaN || nPor <= 0 || nPor > 1) {
+    throw new Error('Invaid porcentage');
+}
+
+let consoleFolders;
+try {
+    if (folder[folder.length - 1] === '/') {
+        folder = folder.substring(0, folder.length - 1);
+    }
+
+    consoleFolders = fs.readdirSync(folder);
+} catch (e) {
+    throw new Error('Invalid path folder');
+}
 
 consoleFolders.forEach(consoleName => {
     const consoleGameList = games[consoleName];
     const romFolder = folder+'/'+consoleName+'/';
     const romNames = fs.readdirSync(romFolder)
 
-    romNames.forEach(rom => findClosestMatch(rom, consoleGameList, romFolder))
+    romNames.forEach(rom => findClosestMatch(rom, consoleGameList, romFolder, nPor))
 })
